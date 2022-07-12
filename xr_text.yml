@@ -1,0 +1,22 @@
+- name: Discovery Host Inventory
+  hosts: all
+  strategy: free
+  gather_facts: false
+
+  tasks:
+    - name: IOSXR Sends show commands
+      cisco.iosxr.iosxr_command:
+        commands: show version
+      ignore_errors: yes
+      when:
+        - ios_type == "iosxr"
+
+    - name: Gather iosxr_facts
+      cisco.iosxr.iosxr_facts:
+        gather_subset: all
+        gather_network_resources: all
+
+    - name: Gather IOSXR interfaces as in given arguments
+      cisco.iosxr.iosxr_interfaces:
+        config:
+        state: gathered
