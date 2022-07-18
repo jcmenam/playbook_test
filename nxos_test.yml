@@ -1,0 +1,10 @@
+- name: Discovery Host Inventory
+  hosts: sandbox-nxos-1.cisco.com
+  strategy: free
+  gather_facts: false
+
+  tasks:
+    - name: Gather legacy and resource facts
+      cisco.nxos.nxos_facts:
+        gather_subset: all
+        gather_network_resources: all
