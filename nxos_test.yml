@@ -7,4 +7,20 @@
     - name: Gather legacy and resource facts
       cisco.nxos.nxos_facts:
         gather_subset: all
-        gather_network_resources: all
+        #gather_network_resources: all
+      vars:
+        ansible_command_timeout: 180
+      register: nxos_info
+
+    - name: Gathered all OSPF processes from the device
+      cisco.nxos.nxos_ospfv2:
+        state: gathered
+      when:
+        - "'ospf' in {{ nxos_info.ansible_facts.ansible_net_features_enabled }}"
+      register: ospf_gathered
+
+    - name: debug
+      ansible.builtin.debug:
+        msg: "{{ ospf_gathered }}"
+      when:
+        - ospf_gathered is defined
